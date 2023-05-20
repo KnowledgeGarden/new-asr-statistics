@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!-- 
+	tqos-asr-statistics-server properties
+-->
+
+<properties>
+	<parameter name="ServerURL" value="localhost" />  <!--  ??? CHANGEME -->
+	<parameter name="ServerPort" value="6900" /> <!-- ??? CHANGEME -->
+
+	<!-- where the statistics data is be stored;
+		this file should not be shared with other agents -->
+	<parameter name="StatisticsPath" value="data/statistics.json" />
+	<parameter name="BasePath" value="data/" />
+	
+	<parameter name="StopperPort" value="6950" /> <!-- ??? CHANGEME -->
+	
+	<parameter name="ClientId" value="changeme" />
+</properties>
+
