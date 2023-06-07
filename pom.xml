@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.topicquests</groupId>
     <artifactId>new-statistics</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1-SNAPSHOT</version>
     <name>tqos-statistics-server</name>
     <developers>
         <developer>
