@@ -18,25 +18,25 @@ public class StatServerEnvironment extends RootEnvironment {
 	private IStatServerModel model;
 	private StopperListener stopper;
 	boolean isStopped = false;
-	
+
 	/**
 	 * Default constructor
 	 */
 	public StatServerEnvironment() {
-		super("config-props.xml", "logger.properties");
+		super("config-props.xml");
 		Boot();
 	}
-	
+
 	/**
 	 * Custom constructor
 	 * @param configPath
 	 * @param logPath
 	 */
 	public StatServerEnvironment(String configPath, String logPath) {
-		super(configPath, logPath);
+		super(configPath);
 		Boot();
 	}
-	
+
 	void Boot() {
 		stopper = new StopperListener(this);
 		System.out.println("A");
@@ -49,9 +49,9 @@ public class StatServerEnvironment extends RootEnvironment {
 		}
 		System.out.println("C");
 		isStopped = false;
-		
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			
+
 			@Override
 			public void run() {
 				shutDown();
@@ -64,7 +64,7 @@ public class StatServerEnvironment extends RootEnvironment {
 		return model;
 	}
 
-	
+
 	public void shutDown() {
 		System.out.println("StatServer shutting down "+isStopped);
 		if (!isStopped)  {
@@ -76,6 +76,6 @@ public class StatServerEnvironment extends RootEnvironment {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 }
