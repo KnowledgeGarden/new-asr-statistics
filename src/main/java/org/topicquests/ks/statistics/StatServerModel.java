@@ -14,6 +14,7 @@ import org.topicquests.support.ResultPojo;
 import org.topicquests.support.api.IResult;
 import org.topicquests.util.JSONUtil;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 /**
@@ -150,6 +151,48 @@ public class StatServerModel implements IStatServerModel {
 		}
 	}
 
+	String handleUpdatee(JSONObject request) {
+		String result = "OK"; //default
+		String json = request.getAsString(IStatServerModel.CARGO).toString();
+		JSONParser p = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
+		JSONArray a = null;
+		try {
+			a = (JSONArray)p.parse(json);
+			result = doUpdate(a);
+		} catch (Exception e) {
+			environment.logError(e.getMessage(), e);
+			return IStatServerModel.ERROR+" "+e.getMessage();
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param stats a collection of key/value JSONObjects
+	 * @return
+	 */
+	String doUpdate(JSONArray stats) {
+		String result = "OK"; //default
+		synchronized(data) {
+			JSONObject st;
+			int len = stats.size();
+			String key;
+			int value;
+			for (int i=0;i<len;i++) {
+				st = (JSONObject)stats.get(i);
+				key = st.getAsString("key");
+				value = st.getAsNumber("value").intValue();
+				Long count = (Long)data.get(key);
+				if (count == null) 
+					count = new Long(0);
+				count += value;
+				data.put(key, count);
+				isDirty = true;
+				isCacheDirty = true;
+			}
+		}
+		return result;
+	}
 	/**
 	 * Returns a {@link JSONObject} filled with the current snapshot
 	 * of key-value pairs of all keys.
@@ -187,6 +230,7 @@ public class StatServerModel implements IStatServerModel {
 			} else if (verb.equals(IStatServerModel.GET_KEY)) {
 				Long v = getKey(request);
 				jo.put(IStatServerModel.CARGO, v.toString());
+			} else if (verb.equals(IStatServerModel.UPDATE)) {
 			} else if (verb.equals(IStatServerModel.TEST))  {
 				jo = new JSONObject();
 				jo.put(IStatServerModel.CARGO, "Yup");

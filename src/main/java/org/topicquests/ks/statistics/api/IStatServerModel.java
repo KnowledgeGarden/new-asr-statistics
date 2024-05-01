@@ -24,6 +24,7 @@ public interface IStatServerModel {
 		FIELD			= "field",
 		TEST			= "test",
 		ERROR			= "error",
+		UPDATE			= "update",
 		CARGO			= "cargo"; //return object a JSON blob of stats
 	
 	
