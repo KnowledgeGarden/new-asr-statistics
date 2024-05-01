@@ -174,17 +174,17 @@ public class StatServerModel implements IStatServerModel {
 	String doUpdate(JSONArray stats) {
 		String result = "OK"; //default
 		synchronized(data) {
-			JSONObject st;
+			JSONArray st;
 			int len = stats.size();
 			String key;
 			int value;
 			for (int i=0;i<len;i++) {
-				st = (JSONObject)stats.get(i);
-				key = st.getAsString("key");
-				value = st.getAsNumber("value").intValue();
+				st = (JSONArray)stats.get(i);
+				key = st.get(i).toString();
+				value = ((Integer)st.get(i)).intValue();
 				Long count = (Long)data.get(key);
 				if (count == null) 
-					count = new Long(0);
+					count = Long.valueOf(0);
 				count += value;
 				data.put(key, count);
 				isDirty = true;
