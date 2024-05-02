@@ -151,13 +151,16 @@ public class StatServerModel implements IStatServerModel {
 		}
 	}
 
-	String handleUpdatee(JSONObject request) {
+	String handleUpdate(JSONObject request) {
+		System.out.println("HR "+request);
 		String result = "OK"; //default
 		String json = request.getAsString(IStatServerModel.CARGO).toString();
 		JSONParser p = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
 		JSONArray a = null;
 		try {
 			a = (JSONArray)p.parse(json);
+			System.out.println("HR-1 "+a);
+
 			result = doUpdate(a);
 		} catch (Exception e) {
 			environment.logError(e.getMessage(), e);
@@ -177,11 +180,11 @@ public class StatServerModel implements IStatServerModel {
 			JSONArray st;
 			int len = stats.size();
 			String key;
-			int value;
+			long value;
 			for (int i=0;i<len;i++) {
 				st = (JSONArray)stats.get(i);
-				key = st.get(i).toString();
-				value = ((Integer)st.get(i)).intValue();
+				key = st.get(0).toString();
+				value = Long.parseLong((String)st.get(1));
 				Long count = (Long)data.get(key);
 				if (count == null) 
 					count = Long.valueOf(0);
@@ -216,12 +219,16 @@ public class StatServerModel implements IStatServerModel {
 
 	@Override
 	public IResult handleRequest(JSONObject request) {
+		System.out.println("MHR "+request);
 		IResult result = new ResultPojo();
 		JSONObject jo = new JSONObject(); // default empty
 		environment.logDebug("StatServerModel.handleNewRequest "+request);
 		String verb = request.getAsString(IStatServerModel.VERB);
+		System.out.println("MHR-2 "+verb);
+
 		String clientIx = request.getAsString(IStatServerModel.CLIENT_ID);
 		if (clientIx.equals(clientId)) {
+			System.out.println("MHR-3 "+verb);
 			if (verb.equals(IStatServerModel.GET_STATS))
 				jo = getStats();
 			else if (verb.equals(IStatServerModel.ADD_TO_KEY)) {
@@ -231,6 +238,8 @@ public class StatServerModel implements IStatServerModel {
 				Long v = getKey(request);
 				jo.put(IStatServerModel.CARGO, v.toString());
 			} else if (verb.equals(IStatServerModel.UPDATE)) {
+				String x = handleUpdate(request);
+				jo.put(IStatServerModel.CARGO, x);
 			} else if (verb.equals(IStatServerModel.TEST))  {
 				jo = new JSONObject();
 				jo.put(IStatServerModel.CARGO, "Yup");

@@ -17,8 +17,8 @@ public class StatTester {
 	public static void main(String[] args) {
 		//new BootTest();
 		//new Stringolizer();
-		new StatsTest();
-
+		//new StatsTest();
+		new UpdateTest();
 	}
 
 }

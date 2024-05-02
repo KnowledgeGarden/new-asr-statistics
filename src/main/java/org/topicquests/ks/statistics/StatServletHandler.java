@@ -5,8 +5,10 @@
  */
 package org.topicquests.ks.statistics;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -106,13 +108,22 @@ public class StatServletHandler {
 	
 	JSONObject processRequest(HttpServletRequest request) throws ServletException {
 		JSONObject result = null;
-		String pt = getPath(request);
-		if (!pt.startsWith("{")) {
-			int where = pt.indexOf('/');
-			if (where > -1)  {
-				pt = pt.substring(where+1);
+		String pt;
+		try {
+			InputStream is = request.getInputStream();
+			InputStreamReader rdr = new InputStreamReader(is, "UTF-8");
+			BufferedReader br = new BufferedReader(rdr);
+			StringBuilder buf = new StringBuilder();
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				buf.append(line);
 			}
-		}
+			pt = buf.toString();
+			System.out.println("BOO "+pt);
+		} catch (Exception e) {
+			environment.logError(e.getMessage(), e);
+			throw new ServletException(e);
+		}		System.out.println("GOT:\n"+pt);
 		result = jsonFromString(pt);
 		
 		return result;
