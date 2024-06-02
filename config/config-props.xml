@@ -4,6 +4,11 @@
 -->
 
 <properties>
+
+	<parameter name="RedisBase" value="tq2.topicquests.net" /> <!-- CHANGEME -->
+	<!-- Out to tqos-ingester -->
+	<parameter name="REDIS_TOPIC" value="Stats" /> 
+
 	<parameter name="ServerURL" value="localhost" />  <!--  ??? CHANGEME -->
 	<parameter name="ServerPort" value="6900" /> <!-- ??? CHANGEME -->
 

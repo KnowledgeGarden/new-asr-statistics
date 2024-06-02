@@ -30,9 +30,10 @@ public class StatServerModel implements IStatServerModel {
 	private int cacheCounter = 0;
 	private final int MAX_CACHE = 50;
 	private final String clientId;
-
+	private RedisClient redis;
 	private final String
 		STATISTICS_PATH,
+		REDIS_TOPIC,
 		BASE_PATH;
 
 	/**
@@ -40,8 +41,10 @@ public class StatServerModel implements IStatServerModel {
 	 */
 	public StatServerModel(StatServerEnvironment env) throws Exception {
 		environment = env;
+		REDIS_TOPIC = environment.getStringProperty("REDIS_TOPIC");
 		clientId = environment.getStringProperty("ClientId");
 		util = new JSONUtil();
+		redis = new RedisClient(environment);
 		STATISTICS_PATH = environment.getStringProperty("StatisticsPath");
 		BASE_PATH = environment.getStringProperty("BasePath");
 		System.out.println("M1 "+STATISTICS_PATH);
@@ -108,6 +111,7 @@ public class StatServerModel implements IStatServerModel {
 		if (isDirty) {
 			synchronized(data) {
 				util.save(STATISTICS_PATH, data);
+				redis.add(REDIS_TOPIC, data.toJSONString());
 			}
 			isDirty = false;
 		}
